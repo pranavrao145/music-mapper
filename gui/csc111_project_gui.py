@@ -31,6 +31,7 @@ import tkinter
 frame_colour = '#247BA0'
 label_colour = '#247BA0'
 
+
 def graph_playlist():
     """Executes MusicMapper's playlist recommendation algorithm via a button click and represents the results as an
     undirected graph.
@@ -47,8 +48,9 @@ def graph_playlist():
         playlist_graph.add_edge(input_song, song[0], weight=song[1])
     # **********
 
-    # produce graoh with weighted edges
+    # produce graph with weighted edges
     create_weighted_edges(playlist_graph)
+
 
 def create_weighted_edges(playlist_graph: nx.Graph()) -> None:
     """Produces a graph with weighted edges by embedding the graph in the tkinter interface.
@@ -102,6 +104,7 @@ def draw_graph(playlist_graph: nx.Graph(), pos: dict, fig: Figure, elarge: list,
     # display the similarity score on the edges
 
     nx.draw_networkx_edge_labels(playlist_graph, pos, edge_labels, ax=ax)
+
 
 class MainFrame:
     """Generates an instance of the main landing page of MusicMapper along with its functionality.
