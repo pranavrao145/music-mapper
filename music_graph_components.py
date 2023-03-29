@@ -29,10 +29,7 @@ class Song:
         - artist_names: The name(s) of the artist(s) of this song.
         - release_date: The date that this song was released.
         - genres: The genre(s) of this song.
-        - numerical_traits:
-            A mapping containing the numerically-quantified traits of this song.
-            Each key in the mapping is the name of the trait, and the corresponding
-            value is the numerical value of that trait.
+        - numerical_traits: A list containing the numerically-quantified traits of this song.
         - edges:
             A mapping containing the songs that are adjacent to this song.
             Each key in the mapping is the Spotify ID of a neighbour song,
@@ -46,7 +43,7 @@ class Song:
         - self.album_name != ''
         - all(name != '' for name in self.artist_names)
         - all(genre != '' for genre in self.genres)
-        - all(trait_name != '' for trait_name in self.numerical_traits)
+        - len(self.numerical_traits) == 13
     """
     spotify_id: str
     track_name: str
@@ -54,11 +51,11 @@ class Song:
     artist_names: list[str]
     release_date: str
     genres: list[str]
-    numerical_traits: dict[str, float]
+    numerical_traits: list[float]
     edges: dict[str, Edge]
 
     def __init__(self, spotify_id: str, track_name: str, album_name: str, artist_names: list[str],
-                 release_date: str, genres: list[str], numerical_traits: dict[str, float]) -> None:
+                 release_date: str, genres: list[str], numerical_traits: list[float]) -> None:
         """Initialize a new song with an empty collection of edges, the given Spotify ID, track name,
         album name, artist name(s), release date, genre(s), and numerical trait(s).
         """
@@ -81,6 +78,7 @@ class Edge:
 
     Representation Invariants:
     - len(self.endpoints) == 2
+    - 0.0 <= self._similarity_score <= 1.0
     """
     # Private Instance Attributes:
     #     - _similarity_score:
@@ -109,7 +107,7 @@ class Edge:
 
         return self._similarity_score
 
-    def get_endpoints(self) -> tuple[Song]:
+    def get_endpoints(self) -> tuple[Song, ...]:
         """Return the two Songs in this Edge's endpoints collection."""
         return tuple(self.endpoints)
 
