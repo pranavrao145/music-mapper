@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 python-ta = "*"
+scikit-learn = "*"
+numpy = "*"
+networkx = "*"
+matplotlib = "*"
 
 [dev-packages]
 
