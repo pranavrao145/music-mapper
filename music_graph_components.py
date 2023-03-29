@@ -14,7 +14,7 @@ community at the University of Toronto St. George campus.
 This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
 """
 from __future__ import annotations
-import datetime
+# import datetime
 from python_ta.contracts import check_contracts
 
 
@@ -52,13 +52,13 @@ class Song:
     track_name: str
     album_name: str
     artist_names: list[str]
-    release_date: datetime.date
+    release_date: str
     genres: list[str]
     numerical_traits: dict[str, float]
     edges: dict[str, Edge]
 
     def __init__(self, spotify_id: str, track_name: str, album_name: str, artist_names: list[str],
-                 release_date: datetime.date, genres: list[str], numerical_traits: dict[str, float]) -> None:
+                 release_date: str, genres: list[str], numerical_traits: dict[str, float]) -> None:
         """Initialize a new song with an empty collection of edges, the given Spotify ID, track name,
         album name, artist name(s), release date, genre(s), and numerical trait(s).
         """
@@ -130,7 +130,9 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        'extra-imports': ['annotations', 'datetime', 'check_contracts'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        # the names (strs) of imported modules
+        'extra-imports': ['annotations', 'datetime', 'check_contracts'],
+        # the names (strs) of functions that call print/open/input
+        'allowed-io': [],
         'max-line-length': 120
     })

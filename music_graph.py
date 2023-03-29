@@ -49,8 +49,8 @@ class MusicGraph:
             - first_song.spotify_id in self._songs
             - second_song.spotify_id in self._songs
         """
-        # TODO: Handle case where edge already exists(Pranav)
-        Edge(first_song, second_song)
+        if first_song not in second_song.edges:
+            Edge(first_song, second_song)
 
     def __contains__(self, spotify_id: str) -> bool:
         """Determine whether a song with the given spotify_id is part of this music graph.
@@ -82,7 +82,9 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        'extra-imports': ['music_graph_components'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        # the names (strs) of imported modules
+        'extra-imports': ['music_graph_components'],
+        # the names (strs) of functions that call print/open/input
+        'allowed-io': [],
         'max-line-length': 120
     })
