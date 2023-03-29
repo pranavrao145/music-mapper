@@ -2,7 +2,7 @@
 NOTE: lower level functions here may be moved to other files (caculate_edge_weight may be moved to
 the importing function after it's implemented, for example.)"""
 
-from Song import Song
+from music_graph_components import Song
 import math
 
 

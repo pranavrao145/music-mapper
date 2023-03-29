@@ -41,7 +41,8 @@ def graph_playlist():
 
     # ********** (TO BE CHANGED) potential example of algorithm output
     input_song = 'Die For You'
-    songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
+    songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4),
+             ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
 
     # use loop to create the graph nodes and edges
     for song in songs:
@@ -56,8 +57,10 @@ def create_weighted_edges(playlist_graph: nx.Graph()) -> None:
     """Produces a graph with weighted edges by embedding the graph in the tkinter interface.
     """
     # filter edges with high v.s. low similarity scores into two separate lists
-    elarge = [(song1, song2) for (song1, song2, weights) in playlist_graph.edges(data=True) if weights["weight"] > 0.5]
-    esmall = [(song1, song2) for (song1, song2, weights) in playlist_graph.edges(data=True) if weights["weight"] <= 0.5]
+    elarge = [(song1, song2) for (song1, song2, weights)
+              in playlist_graph.edges(data=True) if weights["weight"] > 0.5]
+    esmall = [(song1, song2) for (song1, song2, weights)
+              in playlist_graph.edges(data=True) if weights["weight"] <= 0.5]
 
     # create figure object (holds plot elements)
     fig = Figure(figsize=(5, 4), dpi=100, frameon=False)
@@ -91,10 +94,12 @@ def draw_graph(playlist_graph: nx.Graph(), pos: dict, fig: Figure, elarge: list,
     # draw graph nodes
     nx.draw_networkx_nodes(playlist_graph, pos, node_size=700, ax=ax)
     # draw node labels
-    nx.draw_networkx_labels(playlist_graph, pos, font_size=15, font_family="sans-serif", ax=ax)
+    nx.draw_networkx_labels(playlist_graph, pos,
+                            font_size=15, font_family="sans-serif", ax=ax)
 
     # draw the solid edges (high similarity score)
-    nx.draw_networkx_edges(playlist_graph, pos, edgelist=elarge, width=6, ax=ax)
+    nx.draw_networkx_edges(playlist_graph, pos,
+                           edgelist=elarge, width=6, ax=ax)
     # draw the dashed edges (low similarity score)
     nx.draw_networkx_edges(playlist_graph, pos, edgelist=esmall, width=6, alpha=0.5, edge_color='b', style="dashed",
                            ax=ax)
@@ -109,6 +114,7 @@ def draw_graph(playlist_graph: nx.Graph(), pos: dict, fig: Figure, elarge: list,
 class MainFrame:
     """Generates an instance of the main landing page of MusicMapper along with its functionality.
     """
+
     def __init__(self, main_frm):
         # initialize root frame
         self.main_frm = main_frm
@@ -118,7 +124,8 @@ class MainFrame:
         """Creates the graph elements/widgets.
         """
         # create title label
-        self.title_label = ttk.Label(main_frm, text='MusicMapper', font=('Trattatello', 120))
+        self.title_label = ttk.Label(
+            main_frm, text='MusicMapper', font=('Trattatello', 120))
 
         # (user-input) song entry
         self.song_input = StringVar()
@@ -127,8 +134,10 @@ class MainFrame:
         # self.song_entry.insert(0, 'Enter a Song')
 
         # create playlist button
-        self.create_playlist_button = ttk.Button(main_frm, text='Create Playlist')
-        self.create_playlist_button['command'] = lambda: [self.button_click(), graph_playlist()]
+        self.create_playlist_button = ttk.Button(
+            main_frm, text='Create Playlist')
+        self.create_playlist_button['command'] = lambda: [
+            self.button_click(), graph_playlist()]
 
         # adjust widget positions
         self.title_label.pack()
