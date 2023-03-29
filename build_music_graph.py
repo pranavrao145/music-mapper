@@ -46,22 +46,16 @@ from music_graph import MusicGraph
 from music_graph_components import Song
 
 
-@check_contracts
-def create_song_network(data_dir: str) -> MusicGraph:
+def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     """
-    Given a data directory, go through each subfolder in that directory and
-    read the csv files under the subfolders. Use the information to create
-    several new Songs, put them into a new MusicGraph, and return the new
-    MusicGraph.
-    Preconditions:
-    - data_dir and its subdirectories contain csv files of the correct format,
-      as described by the module header
+    Given a subfolder in a data directory that ONLY contains CSV files of the format
+    specified in the module header, iterate through each CSV file and add it to the
+    song graph.
     """
-    music_graph = MusicGraph()
-    all_csv_files = [file for path, _, _ in os.walk(
-        data_dir) for file in glob(os.path.join(path, '*.csv'))]
+    csv_files = [file for path, _, _ in os.walk(
+        subdirectory) for file in glob(os.path.join(path, '*.csv'))]
 
-    for f in all_csv_files:
+    for f in csv_files:
         with open(f) as csv_file:
             songs_so_far = []
             reader = csv.reader(csv_file)
@@ -106,6 +100,24 @@ def create_song_network(data_dir: str) -> MusicGraph:
                     music_graph.add_edge(
                         music_graph[songs_so_far[i]], music_graph[songs_so_far[j]])
 
+
+@check_contracts
+def create_song_network(data_dir: str) -> MusicGraph:
+    """
+    Given a data directory, go through each subfolder in that directory and
+    read the csv files under the subfolders. Use the information to create
+    several new Songs, put them into a new MusicGraph, and return the new
+    MusicGraph.
+    Preconditions:
+    - data_dir and its subdirectories contain csv files of the correct format,
+      as described by the module header
+    """
+    music_graph = MusicGraph()
+    subdirectories = [info[0] for info in os.walk(data_dir)]
+
+    for subdirectory in subdirectories:
+        _process_folder(subdirectory, music_graph)
+
     return music_graph
 
 
@@ -118,6 +130,6 @@ if __name__ == "__main__":
 
     python_ta.check_all(config={
         'extra-imports': ['glob', 'os', 'csv', 'datetime', 'music_graph', 'music_graph_components'],
-        'allowed-io': ['create_song_network'],
+        'allowed-io': ['_process_folder'],
         'max-line-length': 120
     })
