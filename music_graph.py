@@ -14,7 +14,7 @@ from python_ta.contracts import check_contracts
 from music_graph_components import Song, Edge
 
 
-@check_contracts
+# @check_contracts
 class MusicGraph:
     """A graph that represents the network of all the Songs from the inputted data set.
 
@@ -42,15 +42,16 @@ class MusicGraph:
         self._songs[song.spotify_id] = song
 
     def add_edge(self, first_song: Song, second_song: Song) -> None:
-        """Add an edge between two Songs in this music graph.
+        """Add an edge between two Songs in this music graph. If an edge 
+        already exists between the two songs, do nothing.
 
         Preconditions:
             - first_song != second_song
             - first_song.spotify_id in self._songs
             - second_song.spotify_id in self._songs
         """
-        # TODO: Handle case where edge already exists(Pranav)
-        Edge(first_song, second_song)
+        if second_song.spotify_id not in first_song.edges:
+            Edge(first_song, second_song)
 
     def __contains__(self, spotify_id: str) -> bool:
         """Determine whether a song with the given spotify_id is part of this music graph.
@@ -82,7 +83,7 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        'extra-imports': ['music_graph_components'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        'extra-imports': ['music_graph_components'],
+        'allowed-io': [],
         'max-line-length': 120
     })

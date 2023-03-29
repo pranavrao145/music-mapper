@@ -14,7 +14,6 @@ community at the University of Toronto St. George campus.
 This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
 """
 from __future__ import annotations
-import datetime
 from python_ta.contracts import check_contracts
 
 
@@ -52,13 +51,13 @@ class Song:
     track_name: str
     album_name: str
     artist_names: list[str]
-    release_date: datetime.date
+    release_date: str
     genres: list[str]
     numerical_traits: dict[str, float]
     edges: dict[str, Edge]
 
     def __init__(self, spotify_id: str, track_name: str, album_name: str, artist_names: list[str],
-                 release_date: datetime.date, genres: list[str], numerical_traits: dict[str, float]) -> None:
+                 release_date: str, genres: list[str], numerical_traits: dict[str, float]) -> None:
         """Initialize a new song with an empty collection of edges, the given Spotify ID, track name,
         album name, artist name(s), release date, genre(s), and numerical trait(s).
         """
@@ -70,6 +69,12 @@ class Song:
         self.genres = genres
         self.numerical_traits = numerical_traits
         self.edges = {}
+
+    def __str__(self) -> str:
+        """
+        Returns a string representation of this object.
+        """
+        return f'Song {self.spotify_id}, {self.track_name}, {self.artist_names}, {self.genres}'
 
 
 @check_contracts
@@ -106,7 +111,6 @@ class Edge:
 
     def get_similarity_score(self) -> float:
         """Return the similarity score of this Edge."""
-
         return self._similarity_score
 
     def get_endpoints(self) -> tuple[Song]:
@@ -121,6 +125,12 @@ class Edge:
         """
         return (self.endpoints - {song}).pop()
 
+    def __str__(self) -> str:
+        """
+        Returns a string representation of this object.
+        """
+        return f'Edge {self.endpoints}, {self._similarity_score}'
+
 
 if __name__ == '__main__':
     import doctest
@@ -130,7 +140,9 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        'extra-imports': ['annotations', 'datetime', 'check_contracts'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        # the names (strs) of imported modules
+        'extra-imports': ['annotations', 'datetime', 'check_contracts'],
+        # the names (strs) of functions that call print/open/input
+        'allowed-io': [],
         'max-line-length': 120
     })

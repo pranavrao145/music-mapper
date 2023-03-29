@@ -1,9 +1,22 @@
-"""Functions for calculating edge weights between two songs.
-NOTE: lower level functions here may be moved to other files (caculate_edge_weight may be moved to
-the importing function after it's implemented, for example.)"""
+"""CSC111 Winter 2023 Course Project: MusicMapper
+===============================
+This module contains functions for calculating edge weights between two songs.
+NOTE: lower level functions here may be moved to other files
+(caculate_edge_weight may be moved to the importing function after it's
+implemented, for example.)
 
-from Song import Song
-import math
+Copyright and Usage Information
+===============================
+This file is provided solely for the personal and private use of the CSC111
+community at the University of Toronto St. George campus.
+
+This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
+"""
+
+from music_graph_components import Song
+
+
+# import math
 
 
 def calculate_edge_weight(song1: Song, song2: Song) -> float:
@@ -47,3 +60,17 @@ def euclidean_distance(v1: list[float], v2: list[float]) -> float:
     """Returns the Euclidean distance/inner product between the two input vectors."""
     total = sum((v1[i] - v2[i]) ** 2 for i in range(0, len(v1)))
     return total ** (1 / 2)
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod(verbose=True)
+
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['music_graph_components'],
+        'allowed-io': [],
+        'max-line-length': 120
+    })
