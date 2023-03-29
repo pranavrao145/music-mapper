@@ -1,6 +1,10 @@
 """CSC111 Winter 2023 Course Project: MusicMapper
 ===============================
-This module contains the Song class, which is used to represent a song from Spotify.
+This module contains the Song and Edge class.
+
+The Song class is used to represent a song from Spotify.
+
+The Edge class is used to represent an edge between two Songs.
 
 Copyright and Usage Information
 ===============================
@@ -10,7 +14,6 @@ community at the University of Toronto St. George campus.
 This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
 """
 from __future__ import annotations
-from Edge import Edge
 import datetime
 from python_ta.contracts import check_contracts
 
@@ -69,6 +72,56 @@ class Song:
         self.edges = {}
 
 
+@check_contracts
+class Edge:
+    """A link (or "edge") connecting two Songs in a MusicGraph network.
+
+    Instance Attributes:
+    - endpoints: The two Songs that are linked by this Edge.
+
+    Representation Invariants:
+    - len(self.endpoints) == 2
+    """
+    # Private Instance Attributes:
+    #     - _similarity_score:
+    #         A float that represents the similarity between the two Songs that are linked by this Edge.
+    #         The higher this value is, the more similar the two Songs are.
+    endpoints: set[Song]
+    _similarity_score: float
+
+    def __init__(self, first_song: Song, second_song: Song) -> None:
+        """Initialize an edge with the two given Songs, and
+        set self._similarity_score to a starting value of 0.0.
+
+        Also add this Edge to first_song and second_song.
+
+        Preconditions:
+            - first_song != second_song
+            - first_song and second_song are not already connected by an Edge
+        """
+        self.endpoints = {first_song, second_song}
+        first_song.edges[second_song.spotify_id] = self
+        second_song.edges[first_song.spotify_id] = self
+        self._similarity_score = 0.0
+
+    def get_similarity_score(self) -> float:
+        """Return the similarity score of this Edge."""
+
+        return self._similarity_score
+
+    def get_endpoints(self) -> tuple[Song]:
+        """Return the two Songs in this Edge's endpoints collection."""
+        return tuple(self.endpoints)
+
+    def get_other_endpoint(self, song: Song) -> Song:
+        """Return the endpoint of this Edge that is not equal to the given Song.
+
+        Preconditions:
+        - song in self.endpoints
+        """
+        return (self.endpoints - {song}).pop()
+
+
 if __name__ == '__main__':
     import doctest
 
@@ -77,7 +130,7 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        'extra-imports': ['annotations', 'Edge', 'datetime', 'check_contracts'],  # the names (strs) of imported modules
+        'extra-imports': ['annotations', 'datetime', 'check_contracts'],  # the names (strs) of imported modules
         'allowed-io': [],  # the names (strs) of functions that call print/open/input
         'max-line-length': 120
     })
