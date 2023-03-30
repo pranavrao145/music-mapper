@@ -41,14 +41,13 @@ This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu
 from glob import glob
 import os
 import csv
+import numpy
+from sklearn.preprocessing import StandardScaler
+# from sklearn.preprocessing import MinMaxScaler
 
-import sklearn.preprocessing
 from python_ta.contracts import check_contracts
 from music_graph import MusicGraph
 from music_graph_components import Song
-import numpy
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
 
 
 def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
