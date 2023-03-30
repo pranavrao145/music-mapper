@@ -15,41 +15,57 @@ from python_ta.contracts import check_contracts
 # imports for networkx
 import networkx as nx
 
-
 # imports for matplotlib
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
 
 # imports for tkinter
-from tkinter import ttk
-from tkinter import *
+from tkinter import ttk, Tk, StringVar
 import tkinter
 
-# styles
-frame_colour = '#247BA0'
-label_colour = '#247BA0'
+# create root frame
+root = Tk()
+# window size
+root.state('zoom')
+# change name of window
+root.title('MusicMapper')
 
+# create graph object
+playlists_graph = nx.Graph()
 
-def graph_playlist():
+# create figure object (holds plot elements)
+fig = Figure(figsize=(5, 4), dpi=100, frameon=False)
+# adds canvas to interface
+canvas = FigureCanvasTkAgg(fig, master=root)
+# adds toolbar
+toolbar = NavigationToolbar2Tk(canvas, root)
+toolbar.update()
+
+# creates plot axis
+ax = fig.add_axes([0, 0, 1, 1])
+# removes axis frame that obscures graph
+ax.axis('off')
+
+def graph_playlist() -> None:
     """Executes MusicMapper's playlist recommendation algorithm via a button click and represents the results as an
     undirected graph.
     """
-    # create graph object
-    playlist_graph = nx.Graph()
+    # clears axis and graph to remove the previous graph
+    ax.clear()
+    playlists_graph.clear()
 
     # ********** (TO BE CHANGED) potential example of algorithm output
-    input_song = 'Die For You'
+    input_song = get_user_input()
     songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
 
     # use loop to create the graph nodes and edges
     for song in songs:
-        playlist_graph.add_edge(input_song, song[0], weight=song[1])
+        playlists_graph.add_edge(input_song, song[0], weight=song[1])
     # **********
 
     # produce graph with weighted edges
-    create_weighted_edges(playlist_graph)
+    create_weighted_edges(playlists_graph)
 
 
 def create_weighted_edges(playlist_graph: nx.Graph()) -> None:
@@ -59,34 +75,17 @@ def create_weighted_edges(playlist_graph: nx.Graph()) -> None:
     elarge = [(song1, song2) for (song1, song2, weights) in playlist_graph.edges(data=True) if weights["weight"] > 0.5]
     esmall = [(song1, song2) for (song1, song2, weights) in playlist_graph.edges(data=True) if weights["weight"] <= 0.5]
 
-    # create figure object (holds plot elements)
-    fig = Figure(figsize=(5, 4), dpi=100, frameon=False)
-
     # node positions (dict where each key is a node that corresponds to its position)
     pos = nx.spring_layout(playlist_graph, seed=7)
-
-    # call to draw_graph
-    draw_graph(playlist_graph, pos, fig, elarge, esmall)
-
-    # creates canvas that will hold the graph that will be embedded into the tkinter interface
-    canvas = FigureCanvasTkAgg(fig, master=root)
-
-    # adds toolbar
-    toolbar = NavigationToolbar2Tk(canvas, root)
-    toolbar.update()
     # adds canvas to interface
     canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
+    # call to draw_graph
+    draw_graph(playlist_graph, pos, elarge, esmall)
+    canvas.draw()
 
-
-def draw_graph(playlist_graph: nx.Graph(), pos: dict, fig: Figure, elarge: list, esmall: list) -> None:
+def draw_graph(playlist_graph: nx.Graph(), pos: dict, elarge: list, esmall: list) -> None:
     """Draws the nodes, edges, and labels of the graph.
     """
-
-    # add axis to figure
-    ax = fig.add_axes([0, 0, 1, 1])
-    # removes frame that obscures graph
-    ax.axis('off')
-
     # ********** drawing the graph
     # draw graph nodes
     nx.draw_networkx_nodes(playlist_graph, pos, node_size=700, ax=ax)
@@ -109,12 +108,12 @@ def draw_graph(playlist_graph: nx.Graph(), pos: dict, fig: Figure, elarge: list,
 class MainFrame:
     """Generates an instance of the main landing page of MusicMapper along with its functionality.
     """
-    def __init__(self, main_frm):
+    def __init__(self, main_frm) -> None:
         # initialize root frame
         self.main_frm = main_frm
         self.create_widgets(self.main_frm)
 
-    def create_widgets(self, main_frm):
+    def create_widgets(self, main_frm) -> None:
         """Creates the graph elements/widgets.
         """
         # create title label
@@ -136,7 +135,7 @@ class MainFrame:
         self.create_playlist_button.pack()
 
     def button_click(self) -> str:
-        """Creates graph and records the song input upon button click.
+        """Records the song input upon button click.
         """
         # retrieves and stores user-input
         retrieve_song_input = self.song_entry.get()
@@ -145,19 +144,18 @@ class MainFrame:
         return retrieve_song_input
 
 
-# creates a window
-root = Tk()
-# window size
-root.state('zoom')
-# change name of window
-root.title('MusicMapper')
-
-# create instance of main frame
+# create main frame
 main_frame_window = MainFrame(root)
-# retrieve user input
-user_input = main_frame_window.button_click()
 
-# runs GUI
+def get_user_input() -> str:
+    """Returns the input song.
+    """
+    # retrieve user input
+    user_input = main_frame_window.button_click()
+    return user_input
+
+
+# runs GUI (what we would add to main.py)
 root.mainloop()
 
 
@@ -165,10 +163,9 @@ root.mainloop()
 if __name__ == '__main__':
     import doctest
     doctest.testmod(verbose=True)
-
     # import python_ta
     # python_ta.check_all(config={
-    #     'extra-imports': ['networkx', 'matplotlib.pyplot', 'matplotlib.animation', 'tkinter'],
+    #     'extra-imports': ['networkx', 'matplotlib.backends.backend_tkagg', 'tkinter', 'matplotlib.figure'],
     #     'allowed-io': [],     # the names (strs) of functions that call print/open/input
     #     'max-line-length': 120
     # })
