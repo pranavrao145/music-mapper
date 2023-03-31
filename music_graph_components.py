@@ -43,8 +43,6 @@ class Song:
         - self.album_name != ''
         - self.artist_names != []
         - all(name != '' for name in self.artist_names)
-        - self.genres != []
-        - all(genre != '' for genre in self.genres)
         - len(self.numerical_traits) == 13
     """
     spotify_id: str

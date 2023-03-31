@@ -63,24 +63,17 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
             next(reader)
 
             for line in reader:
+                print(line)
                 song_id = line[0]
 
                 if song_id not in music_graph:
-                    song_numerical_traits = {
-                        "popularity": float(line[7]),
-                        "danceability": float(line[11]),
-                        "energy": float(line[12]),
-                        "key": float(line[13]),
-                        "loudness": float(line[14]),
-                        "mode": float(line[15]),
-                        "speechiness": float(line[16]),
-                        "acousticness": float(line[17]),
-                        "instrumentalness": float(line[18]),
-                        "liveness": float(line[19]),
-                        "valence": float(line[20]),
-                        "tempo": float(line[21]),
-                        "time signature": float(line[22])
-                    }
+                    song_numerical_traits = [float(line[7]), float(line[11]),
+                                             float(line[12]), float(line[13]),
+                                             float(line[14]), float(line[15]),
+                                             float(line[16]), float(line[17]),
+                                             float(line[18]), float(line[19]),
+                                             float(line[20]), float(line[21]),
+                                             float(line[22])]
 
                     song = Song(
                         spotify_id=line[0],
