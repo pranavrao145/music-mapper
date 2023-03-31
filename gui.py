@@ -47,8 +47,10 @@ class MainFrame:
         - toolbar: Creates a toolbar.
         - ax: Creates the graph axes.
 
-    Preconditions:
+    Representation Invariants:
     - song_input is a valid song input that's in the dataset.
+    - artist_input is a valid artist input that's in the dataset.
+    - artist_input must be the artist of the song associated with song_input
     """
     main_frm: Tk
     title_label: ttk.Label
