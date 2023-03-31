@@ -86,7 +86,7 @@ class MusicGraph:
             if track_name == self._songs[u].track_name and artist_name in self._songs[u].artist_names:
                 return self._songs[u].spotify_id
 
-    def get_recommendations(self, song_id: str, num_recs: int) -> list[tuple[str, float]]:
+    def get_recommendations(self, song_id: str, num_recs: int) -> list[tuple[str, int]]:
         """Given a song input, return a list of num_recs recommended songs in (song name, similarity score)
         form."""
         song = self._songs[song_id]
@@ -102,7 +102,7 @@ class MusicGraph:
         j = len(list_of_edges) - 1
         while j > (len(list_of_edges) - 1) - num_recs and j >= 0:
             edge = list_of_edges[j]
-            results.append((edge.get_other_endpoint(song).track_name, round(edge.get_similarity_score(), 3)))
+            results.append((edge.get_other_endpoint(song).track_name, int(round(edge.get_similarity_score(), 2) * 100)))
             j -= 1
 
         return results
