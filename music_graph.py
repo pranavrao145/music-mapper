@@ -95,8 +95,8 @@ class MusicGraph:
         list_of_edges.sort(key=lambda edge: edge.get_similarity_score())
 
         # make sure the list of edges is sorted properly
-        # assert all(list_of_edges[i].get_similarity_score() <= list_of_edges[i + 1].get_similarity_score()
-        #            for i in range(len(list_of_edges)))
+        assert all(list_of_edges[i].get_similarity_score() <= list_of_edges[i + 1].get_similarity_score()
+                   for i in range(len(list_of_edges) - 1))
 
         results = []
         j = len(list_of_edges) - 1

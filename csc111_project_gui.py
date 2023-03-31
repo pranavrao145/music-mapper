@@ -131,7 +131,7 @@ class MainFrame:
         spotify_id = self.music_graph.get_spotify_id(input_song, input_artist)
 
         # songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
-        songs = self.music_graph.get_recommendations(spotify_id, 50)
+        songs = self.music_graph.get_recommendations(spotify_id, 5)
         print(songs)
 
         # use loop to create the graph nodes and edges

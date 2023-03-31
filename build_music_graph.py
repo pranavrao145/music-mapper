@@ -93,7 +93,6 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
                 songs_so_far.append(song_id)
             playlists.append(songs_so_far)
 
-    print(len(playlists))
     # process data
     process_data(playlists, music_graph)
 
@@ -139,8 +138,6 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
         for song_id in playlist:
             all_vectors.append(music_graph[song_id].numerical_traits)
 
-    print('num of vectors:' + str(len(all_vectors)))
-
     # cast data from a list of list to a 2D array for preprocessing
     song_array = numpy.array(all_vectors)
     # print(song_array)
@@ -148,10 +145,8 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
     # standardization
     st_scalar = StandardScaler()
     standardized_data = st_scalar.fit_transform(song_array)
-    # print('standardized data looks like:' + str(standardized_data[:5]))
     # check that the means are close to 0 and standard deviations are 1
     assert all(-0.0001 < value < 0.0001 for value in standardized_data.mean(axis=0))
-    # print('stadard deviation is:' + str(standardized_data.std(axis=0)))
     assert all(0.9999 < value < 1.0001 for value in standardized_data.std(axis=0))
 
     # cast 2D array to a list of lists
@@ -162,8 +157,6 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
         v = list_of_traits[i]
         prod = norm(v)
         list_of_traits[i] = [v[j] / prod for j in range(0, len(v))]
-
-    # print('normalized data looks like:' + str(list_of_traits[:2][:2]))
 
     # update each song's numerical trait
     m = 0
