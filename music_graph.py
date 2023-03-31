@@ -89,20 +89,21 @@ class MusicGraph:
     def get_recommendations(self, song_id: str, num_recs: int) -> list[tuple[str, float]]:
         """Given a song input, return a list of num_recs recommended songs in (song name, similarity score)
         form."""
-        song = self[song_id]
+        song = self._songs[song_id]
         list_of_edges = list(song.edges.values())
         # sort list of edges by similarity score
         list_of_edges.sort(key=lambda edge: edge.get_similarity_score())
 
         # make sure the list of edges is sorted properly
-        assert all(list_of_edges[i].get_similarity_score() <= list_of_edges[i + 1].get_similarity_score()
-                   for i in range(len(list_of_edges)))
+        # assert all(list_of_edges[i].get_similarity_score() <= list_of_edges[i + 1].get_similarity_score()
+        #            for i in range(len(list_of_edges)))
 
         results = []
         j = len(list_of_edges) - 1
-        while j >= num_recs and j >= 0:
+        while j > (len(list_of_edges) - 1) - num_recs and j >= 0:
             edge = list_of_edges[j]
-            results.append((edge.get_other_endpoint(song).track_name, edge.get_similarity_score()))
+            results.append((edge.get_other_endpoint(song).track_name, round(edge.get_similarity_score(), 3)))
+            j -= 1
 
         return results
 

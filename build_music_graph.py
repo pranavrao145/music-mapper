@@ -46,7 +46,7 @@ from sklearn.preprocessing import StandardScaler
 
 from python_ta.contracts import check_contracts
 from music_graph import MusicGraph
-from music_graph_components import Song
+from music_graph_components import Song, Edge
 
 
 def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
