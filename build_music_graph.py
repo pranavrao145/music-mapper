@@ -176,7 +176,7 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
     # normalization by scaling to length 1
     for i in range(0, len(list_of_traits)):
         v = list_of_traits[1]
-        prod = dot(v)
+        prod = norm(v)
         list_of_traits[i] = [v[j] / prod for j in range(0, len(v))]
 
     # update each song's numerical trait
@@ -187,13 +187,13 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
             m += 1
 
     # should be true if all numerical_traits are correctly scaled to have length 1
-    assert all(0.9999 < all(dot(music_graph[song_id].numerical_traits) < 1.0001 for song_id in playlist)
+    assert all(all(norm(music_graph[song_id].numerical_traits) == 1.0 for song_id in playlist)
                for playlist in playlists)
 
 
-def dot(v1: list[float]) -> float:
-    """Returns the inner product of a vector by itself."""
-    total = sum((v1[i] + v1[i]) ** 2 for i in range(0, len(v1)))
+def norm(v1: list[float]) -> float:
+    """Returns the norm of a vector."""
+    total = sum((v1[i] * v1[i]) for i in range(0, len(v1)))
     return total ** (1 / 2)
 
 
