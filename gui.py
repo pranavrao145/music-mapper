@@ -10,7 +10,7 @@ This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu
 """
 
 # imports for tkinter
-from tkinter import ttk, Tk, StringVar
+from tkinter import ttk, Tk, StringVar, IntVar
 import tkinter
 
 # imports for networkx
@@ -56,6 +56,7 @@ class MainFrame:
     artist_input: StringVar
     artist_entry: ttk.Entry
     song_entry: ttk.Entry
+    num_songs_entry: ttk.Spinbox
     create_playlist_button: ttk.Button
     playlists_graph: nx.Graph
     fig: Figure
@@ -69,13 +70,14 @@ class MainFrame:
         # initialize root frame
         self.main_frm = main_frm
         # window size
-        self.main_frm.state('zoom')
+        # self.main_frm.state('zoom')
         # window title
         self.main_frm.title('MusicMapper')
         self.music_graph = music_graph
 
         # create title label
-        self.title_label = ttk.Label(main_frm, text='MusicMapper', font=('BM Hanna Pro', 120))
+        self.title_label = ttk.Label(
+            main_frm, text='MusicMapper', font=('BM Hanna Pro', 120))
 
         # (user-input) song entry
         self.song_input = StringVar()
@@ -89,10 +91,18 @@ class MainFrame:
         # entry textbox placeholder
         self.artist_entry.insert(0, 'Enter an Artist')
 
+        # (user-input) number of songs
+        self.num_songs_input = StringVar()
+        self.num_songs_entry = ttk.Spinbox(
+            main_frm, from_=1, to=50, textvariable=self.num_songs_input, state='readonly')
+        self.num_songs_entry.insert(0, '1')
+
         # create playlist button
-        self.create_playlist_button = ttk.Button(main_frm, text='Create Playlist')
+        self.create_playlist_button = ttk.Button(
+            main_frm, text='Create Playlist')
         # add button functionality
-        self.create_playlist_button['command'] = lambda: [self.graph_playlist()]
+        self.create_playlist_button['command'] = lambda: [
+            self.graph_playlist()]
 
         # ********** graph elements
         # create graph object
@@ -113,6 +123,7 @@ class MainFrame:
         self.title_label.pack()
         self.song_entry.pack()
         self.artist_entry.pack()
+        self.num_songs_entry.pack()
         self.create_playlist_button.pack()
 
     def graph_playlist(self) -> None:
@@ -127,12 +138,12 @@ class MainFrame:
         # input_song = self.button_click()
         input_song = self.button_click()[0]
         input_artist = self.button_click()[1]
+        num_songs = self.button_click()[2]
 
         spotify_id = self.music_graph.get_spotify_id(input_song, input_artist)
 
         # songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
-        songs = self.music_graph.get_recommendations(spotify_id, 5)
-        print(songs)
+        songs = self.music_graph.get_recommendations(spotify_id, num_songs)
 
         # use loop to create the graph nodes and edges
         for song in songs:
@@ -164,12 +175,15 @@ class MainFrame:
         """
         # ********** drawing the graph
         # draw graph nodes
-        nx.draw_networkx_nodes(playlist_graph, pos, node_size=850, node_color="#2a9d8f", ax=self.ax)
+        nx.draw_networkx_nodes(playlist_graph, pos,
+                               node_size=850, node_color="#2a9d8f", ax=self.ax)
         # draw node labels
-        nx.draw_networkx_labels(playlist_graph, pos, font_size=23, font_family="Times New Roman", ax=self.ax)
+        nx.draw_networkx_labels(
+            playlist_graph, pos, font_size=23, font_family="Times New Roman", ax=self.ax)
 
         # draw the solid edges (high similarity score)
-        nx.draw_networkx_edges(playlist_graph, pos, edgelist=elarge, width=6, edge_color="#e76f51", ax=self.ax)
+        nx.draw_networkx_edges(
+            playlist_graph, pos, edgelist=elarge, width=6, edge_color="#e76f51", ax=self.ax)
         # draw the dashed edges (low similarity score)
         nx.draw_networkx_edges(playlist_graph, pos, edgelist=esmall, width=6, alpha=0.5, edge_color="#264653",
                                style="dashed", ax=self.ax)
@@ -179,17 +193,18 @@ class MainFrame:
         nx.draw_networkx_edge_labels(playlist_graph, pos, edge_labels, font_family="Times New Roman",
                                      font_size=17, ax=self.ax)
 
-    def button_click(self) -> tuple[str, str]:
+    def button_click(self) -> tuple[str, str, int]:
         """Records and returns the song input and artist input upon button click.
         """
         # retrieves and stores user-input
         retrieve_song_input = self.song_entry.get()
-        retrieve_artist_input = self.artist_entry.get()
+        retrieve_artist_input = self.artist_entry.get().split(",")[0]
+        retrieve_num_songs_input = int(self.num_songs_entry.get())
 
         # test print: will delete before final submission
         print(retrieve_song_input)
         print(retrieve_artist_input)
-        return (retrieve_song_input, retrieve_artist_input)
+        return (retrieve_song_input, retrieve_artist_input, retrieve_num_songs_input)
 
 
 if __name__ == '__main__':
