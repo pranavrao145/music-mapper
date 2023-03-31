@@ -1,7 +1,7 @@
 """CSC111 Winter 2023 Course Project: MusicMapper
 ===============================
-This module contains the code responsible for using the Python libraries Networkx and Tkinter to create the
-MusicMapper GUI.
+This module contains the code responsible for using the Python libraries Networkx, MatPlotLib, and Tkinter
+to create the MusicMapper GUI and integrate the functionality.
 Copyright and Usage Information
 ===============================
 This file is provided solely for the personal and private use of the CSC111
@@ -30,11 +30,19 @@ class MainFrame:
     """Generates an instance of the main landing page of MusicMapper along with its functionality.
 
      Instance Attributes:
-        - main_frm: Creates tkinter frame.
-        - title_label: Creates MusicMapper title label.
+        - main_frm: Creates the tkinter frame.
+        - title_label: Creates the MusicMapper title label.
         - song_input: Represents the user song input.
-        - song_entry: Creates the entry box for user input.
-        - create_playlist_button: Creates a button object that generates a playlist.
+        - song_entry: Creates a entry box for user input.
+        - create_playlist_button: Creates a button object.
+        - playlists_graph: Creates a networkx graph object.
+        - fig: Creates a figure object.
+        - canvas: Creates a canvas object.
+        - toolbar: Creates a toolbar.
+        - ax: Creates the graph axes.
+
+    Preconditions:
+    - song_input is a valid song input that's in the dataset.
     """
     main_frm: Tk
     title_label: ttk.Label
@@ -48,6 +56,8 @@ class MainFrame:
     ax: axes._axes.Axes
 
     def __init__(self, main_frm: Tk) -> None:
+        """Initialize the tkinter interface.
+        """
         # initialize root frame
         self.main_frm = main_frm
         # window size
@@ -56,13 +66,13 @@ class MainFrame:
         self.main_frm.title('MusicMapper')
 
         # create title label
-        self.title_label = ttk.Label(main_frm, text='MusicMapper', font=('Trattatello', 120))
+        self.title_label = ttk.Label(main_frm, text='MusicMapper', font=('BM Hanna Pro', 120))
 
         # (user-input) song entry
         self.song_input = StringVar()
         self.song_entry = ttk.Entry(main_frm, textvariable=self.song_input)
         # entry textbox placeholder
-        # self.song_entry.insert(0, 'Enter a Song')
+        self.song_entry.insert(0, 'Enter a Song')
 
         # create playlist button
         self.create_playlist_button = ttk.Button(main_frm, text='Create Playlist')
@@ -100,10 +110,12 @@ class MainFrame:
         # ********** (TO BE CHANGED) potential example of algorithm output
         input_song = self.button_click()
         songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
-
-        # use loop to create the graph nodes and edges
-        for song in songs:
-            self.playlists_graph.add_edge(input_song, song[0], weight=song[1])
+        if input_song == '':
+            self.song_entry.insert(0, 'Please Enter a Valid Song')
+        else:
+            # use loop to create the graph nodes and edges
+            for song in songs:
+                self.playlists_graph.add_edge(input_song, song[0], weight=song[1])
         # **********
 
         # produce graph with weighted edges
@@ -131,19 +143,20 @@ class MainFrame:
         """
         # ********** drawing the graph
         # draw graph nodes
-        nx.draw_networkx_nodes(playlist_graph, pos, node_size=700, ax=self.ax)
+        nx.draw_networkx_nodes(playlist_graph, pos, node_size=850, node_color="#2a9d8f", ax=self.ax)
         # draw node labels
-        nx.draw_networkx_labels(playlist_graph, pos, font_size=15, font_family="sans-serif", ax=self.ax)
+        nx.draw_networkx_labels(playlist_graph, pos, font_size=23, font_family="Times New Roman", ax=self.ax)
 
         # draw the solid edges (high similarity score)
-        nx.draw_networkx_edges(playlist_graph, pos, edgelist=elarge, width=6, ax=self.ax)
+        nx.draw_networkx_edges(playlist_graph, pos, edgelist=elarge, width=6, edge_color="#e76f51", ax=self.ax)
         # draw the dashed edges (low similarity score)
-        nx.draw_networkx_edges(playlist_graph, pos, edgelist=esmall, width=6, alpha=0.5, edge_color='b', style="dashed",
-                               ax=self.ax)
+        nx.draw_networkx_edges(playlist_graph, pos, edgelist=esmall, width=6, alpha=0.5, edge_color="#264653",
+                               style="dashed", ax=self.ax)
         # gets similarity score for each edge via the "weight" attribute. {(song1, song2): similarity_score)}
         edge_labels = nx.get_edge_attributes(playlist_graph, "weight")
         # display the similarity score on the edges
-        nx.draw_networkx_edge_labels(playlist_graph, pos, edge_labels, ax=self.ax)
+        nx.draw_networkx_edge_labels(playlist_graph, pos, edge_labels, font_family="Times New Roman",
+                                     font_size=17, ax=self.ax)
 
     def button_click(self) -> str:
         """Records and returns the song input upon button click.
@@ -159,13 +172,14 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod(verbose=True)
 
-    # import python_ta
-    # python_ta.check_all(config={
-    #     'extra-imports': ['networkx', 'matplotlib.backends.backend_tkagg', 'tkinter', 'matplotlib.figure',
-    #                       'matplotlib'],
-    #     'allowed-io': [],     # the names (strs) of functions that call print/open/input
-    #     'max-line-length': 120,
-    # })
+    import python_ta
+    python_ta.check_all(config={
+        'extra-imports': ['networkx', 'matplotlib.backends.backend_tkagg', 'tkinter', 'matplotlib.figure',
+                          'matplotlib'],
+        'allowed-io': [],     # the names (strs) of functions that call print/open/input
+        'disable': ['R0902'],
+        'max-line-length': 120,
+    })
 
     # create main frame
     root = Tk()
