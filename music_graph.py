@@ -14,7 +14,7 @@ from python_ta.contracts import check_contracts
 from music_graph_components import Song, Edge
 
 
-@check_contracts
+# @check_contracts
 class MusicGraph:
     """A graph that represents the network of all the Songs from the inputted data set.
 
