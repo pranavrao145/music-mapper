@@ -68,14 +68,13 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     playlists = []  # list that contains lists that represent playlists of songs
 
     for f in csv_files:
-        with open(f) as csv_file:
+        with open(f, encoding="utf8") as csv_file:
             songs_so_far = []
             reader = csv.reader(csv_file)
 
             next(reader)
 
             for line in reader:
-                print(line)
                 song_id = line[0]
 
                 if song_id not in music_graph:
