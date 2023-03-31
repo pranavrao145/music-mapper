@@ -44,12 +44,14 @@ class MusicGraph:
     def add_edge(self, first_song: Song, second_song: Song) -> None:
         """Add an edge between two Songs in this music graph.
 
+        Do nothing if the Spotify ID of the first_song is contained in the edges of second_song.
+
         Preconditions:
             - first_song != second_song
             - first_song.spotify_id in self._songs
             - second_song.spotify_id in self._songs
         """
-        if first_song not in second_song.edges:
+        if first_song.spotify_id not in second_song.edges:
             Edge(first_song, second_song)
 
     def __contains__(self, spotify_id: str) -> bool:
@@ -83,7 +85,7 @@ if __name__ == '__main__':
 
     python_ta.check_all(config={
         # the names (strs) of imported modules
-        'extra-imports': ['music_graph_components'],
+        'extra-imports': ['music_graph_components'],  # 'check_contracts'
         # the names (strs) of functions that call print/open/input
         'allowed-io': [],
         'max-line-length': 120
