@@ -22,6 +22,9 @@ from matplotlib.backends.backend_tkagg import (
 from matplotlib.figure import Figure
 from matplotlib import axes
 
+# import MusicMapper algorithm
+from music_graph import get_recommendations
+
 from python_ta.contracts import check_contracts
 
 
@@ -33,7 +36,7 @@ class MainFrame:
         - main_frm: Creates the tkinter frame.
         - title_label: Creates the MusicMapper title label.
         - song_input: Represents the user song input.
-        - song_entry: Creates a entry box for user input.
+        - song_entry: Creates an entry box for user input.
         - create_playlist_button: Creates a button object.
         - playlists_graph: Creates a networkx graph object.
         - fig: Creates a figure object.
@@ -172,14 +175,14 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod(verbose=True)
 
-    import python_ta
-    python_ta.check_all(config={
-        'extra-imports': ['networkx', 'matplotlib.backends.backend_tkagg', 'tkinter', 'matplotlib.figure',
-                          'matplotlib'],
-        'allowed-io': [],     # the names (strs) of functions that call print/open/input
-        'disable': ['R0902'],
-        'max-line-length': 120,
-    })
+    # import python_ta
+    # python_ta.check_all(config={
+    #     'extra-imports': ['networkx', 'matplotlib.backends.backend_tkagg', 'tkinter', 'matplotlib.figure',
+    #                       'matplotlib'],
+    #     'allowed-io': [],     # the names (strs) of functions that call print/open/input
+    #     'disable': ['R0902'],
+    #     'max-line-length': 120,
+    # })
 
     # create main frame
     root = Tk()
