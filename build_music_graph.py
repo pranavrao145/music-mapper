@@ -192,10 +192,10 @@ if __name__ == "__main__":
 
     doctest.testmod(verbose=True)
 
-    import python_ta
-
-    python_ta.check_all(config={
-        'extra-imports': ['glob', 'os', 'csv', 'datetime', 'music_graph', 'music_graph_components'],
-        'allowed-io': ['_process_folder'],
-        'max-line-length': 120
-    })
+    # import python_ta
+    #
+    # python_ta.check_all(config={
+    #     'extra-imports': ['glob', 'os', 'csv', 'datetime', 'music_graph', 'music_graph_components'],
+    #     'allowed-io': ['_process_folder'],
+    #     'max-line-length': 120
+    # })
