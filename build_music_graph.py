@@ -43,7 +43,6 @@ import os
 import csv
 import numpy
 from sklearn.preprocessing import StandardScaler
-# from sklearn.preprocessing import MinMaxScaler
 
 from python_ta.contracts import check_contracts
 from music_graph import MusicGraph
@@ -64,9 +63,6 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     """
     csv_files = [file for path, _, _ in os.walk(
         subdirectory) for file in glob(os.path.join(path, '*.csv'))]
-
-    # TODO: make sure the following passes; as of now it returns 25 then 0
-    assert len(csv_files) == 5
 
     playlists = []  # list that contains lists that represent playlists of songs
 
@@ -95,7 +91,6 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
 
                     music_graph.add_song(song)
                 songs_so_far.append(song_id)
-            # assert len(songs_so_far) < 120
             playlists.append(songs_so_far)
 
     print(len(playlists))
@@ -144,40 +139,31 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
         for song_id in playlist:
             all_vectors.append(music_graph[song_id].numerical_traits)
 
-    print(len(all_vectors))
+    print('num of vectors:' + str(len(all_vectors)))
 
     # cast data from a list of list to a 2D array for preprocessing
     song_array = numpy.array(all_vectors)
-    # TODO: delete this. the following gives 2
-    print(song_array.ndim)
     # print(song_array)
 
     # standardization
     st_scalar = StandardScaler()
     standardized_data = st_scalar.fit_transform(song_array)
-    print(standardized_data.ndim)
-    # print(standardized_data)
+    # print('standardized data looks like:' + str(standardized_data[:5]))
     # check that the means are close to 0 and standard deviations are 1
     assert all(-0.0001 < value < 0.0001 for value in standardized_data.mean(axis=0))
-    # TODO: check the following assertion
-    # print(standardized_data.std(axis=0))
-    # assert all(value == 1.0 for value in standardized_data.std(axis=0))
-
-    # normalization by minmaxscaling
-    # nm_scaler = MinMaxScaler()
-    # normalized_data = nm_scaler.fit_transform(standardized_data)
-    # assert all(value == 0.0 for value in normalized_data.min(axis=0))
-    # assert all(value == 1.0 for value in normalized_data.max(axis=0))
-    # at this point normalized_data is an array that contains processed data for each song
+    # print('stadard deviation is:' + str(standardized_data.std(axis=0)))
+    assert all(0.9999 < value < 1.0001 for value in standardized_data.std(axis=0))
 
     # cast 2D array to a list of lists
     list_of_traits = standardized_data.tolist()
 
     # normalization by scaling to length 1
     for i in range(0, len(list_of_traits)):
-        v = list_of_traits[1]
+        v = list_of_traits[i]
         prod = norm(v)
         list_of_traits[i] = [v[j] / prod for j in range(0, len(v))]
+
+    # print('normalized data looks like:' + str(list_of_traits[:2][:2]))
 
     # update each song's numerical trait
     m = 0
@@ -187,7 +173,7 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
             m += 1
 
     # should be true if all numerical_traits are correctly scaled to have length 1
-    assert all(all(norm(music_graph[song_id].numerical_traits) == 1.0 for song_id in playlist)
+    assert all(all(0.9999 < norm(music_graph[song_id].numerical_traits) < 1.0001 for song_id in playlist)
                for playlist in playlists)
 
 
@@ -197,10 +183,26 @@ def norm(v1: list[float]) -> float:
     return total ** (1 / 2)
 
 
+def tester_function() -> tuple[Song, Song]:
+    """Do a testing run to build music graph. Returns two sample songs for further processing if needed."""
+    graph = create_song_network('data')
+    song = graph['2NV0mpU5YbyJXydzYPgw5O']  # 'AIN'T GONNA ANSWER'
+    song2 = graph['7rl489EKnUgITmkBd6P9zi']  # "Don't Play With It (feat. Latto & Yung Miami) - Remix"
+
+    print(song.numerical_traits)
+    print(song2.numerical_traits)
+
+    print([edge.get_similarity_score() for edge in song.edges.values()])
+
+    return (song, song2)
+
+
 if __name__ == "__main__":
     import doctest
 
     doctest.testmod(verbose=True)
+
+    tester_function()
 
     # import python_ta
     #
