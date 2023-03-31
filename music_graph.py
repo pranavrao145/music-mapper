@@ -75,6 +75,17 @@ class MusicGraph:
         else:
             raise ValueError
 
+    def get_spotify_id(self, track_name: str, artist_name: str) -> str:
+        """Return the Spotify ID of a Song with the given track name and artist name.
+
+        Preconditions:
+         - any(track_name == self._songs[u].track_name for u in self._songs)
+         - any(artist_name in self._songs[u].artist_names for u in self._songs)
+        """
+        for u in self._songs:
+            if track_name == self._songs[u].track_name and artist_name in self._songs[u].artist_names:
+                return self._songs[u].spotify_id
+
     def get_recommendations(self, song_id: str, num_recs: int) -> list[tuple[str, float]]:
         """Given a song input, return a list of num_recs recommended songs in (song name, similarity score)
         form."""
