@@ -103,8 +103,8 @@ class Edge:
         # TODO: verify that this works as intended
         # self._similarity_score = 1.0 - self.euclidean_distance(first_song.numerical_traits,
         #                                                        second_song.numerical_traits)
-        self._similarity_score = self.cosine_similarity(first_song.numerical_traits,
-                                                        second_song.numerical_traits)
+        self._similarity_score = (1.0 + self.cosine_similarity(first_song.numerical_traits,
+                                                               second_song.numerical_traits)) / 2.0
 
     def euclidean_distance(self, v1: list[float], v2: list[float]) -> float:
         """Returns the Euclidean distance/inner product between the two input vectors."""
@@ -117,8 +117,8 @@ class Edge:
         Precondition:
          - sum((v1[i] + v1[i]) ** 2 for i in range(0, len(v1))) == 1
          - sum((v2[i] + v2[i]) ** 2 for i in range(0, len(v1))) == 1"""
-        total = sum((v1[i] + v2[i]) ** 2 for i in range(0, len(v1)))
-        return total ** (1 / 2)
+        total = sum((v1[i] * v2[i]) for i in range(0, len(v1)))
+        return total
 
     def get_similarity_score(self) -> float:
         """Return the similarity score of this Edge."""
