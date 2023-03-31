@@ -35,8 +35,10 @@ Copyright and Usage Information
 ===============================
 This file is provided solely for the personal and private use of the CSC111
 community at the University of Toronto St. George campus.
+
 This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
 """
+from __future__ import annotations
 
 from glob import glob
 import os
@@ -46,9 +48,39 @@ from sklearn.preprocessing import StandardScaler
 
 from python_ta.contracts import check_contracts
 from music_graph import MusicGraph
-from music_graph_components import Song, Edge
+from music_graph_components import Song
 
 
+@check_contracts
+def build_music_graph(data_dir: str) -> MusicGraph:
+    """
+    Given a data directory, go through each subfolder in that directory and
+    read the csv files under the subfolders. Use the information to create
+    several new Songs, put them into a new MusicGraph, and return the new
+    MusicGraph.
+
+    Preconditions:
+    - data_dir and its subdirectories contain csv files of the correct format,
+      as described by the module header
+    """
+    music_graph = MusicGraph()
+    subdirectories = [info[0] for info in os.walk(data_dir)]
+    subdirectories = subdirectories[1:]
+
+    for subdirectory in subdirectories:
+        _process_folder(subdirectory, music_graph)
+
+    return music_graph
+
+
+@check_contracts
+def _norm(v1: list[float]) -> float:
+    """Returns the norm of a vector."""
+    total = sum((item * item) for item in v1)
+    return total ** (1 / 2)
+
+
+@check_contracts
 def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     """
     Given a subfolder in a data directory that ONLY contains CSV files of the format
@@ -77,7 +109,7 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
                 song_id = line[0]
 
                 if song_id not in music_graph:
-                    song_numerical_traits = [float(line[7])] + [float(line[i]) for i in range(11, 23)]
+                    song_numerical_traits = [float(line[7])] + [float(line[k]) for k in range(11, 23)]
 
                     song = Song(
                         spotify_id=line[0],
@@ -94,40 +126,20 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
             playlists.append(songs_so_far)
 
     # process data
-    process_data(playlists, music_graph)
+    _standardize_data(playlists, music_graph)
 
     # iterate through each playlist and add edges
     for playlist in playlists:
         for i in range(0, len(playlist)):
             for j in range(i + 1, len(playlist)):
-                music_graph.add_edge(music_graph[playlist[i]], music_graph[playlist[j]])
+                music_graph.add_edge(
+                    music_graph[playlist[i]], music_graph[playlist[j]])
 
 
-# @check_contracts
-def create_song_network(data_dir: str) -> MusicGraph:
-    """
-    Given a data directory, go through each subfolder in that directory and
-    read the csv files under the subfolders. Use the information to create
-    several new Songs, put them into a new MusicGraph, and return the new
-    MusicGraph.
-    Preconditions:
-    - data_dir and its subdirectories contain csv files of the correct format,
-      as described by the module header
-    """
-    music_graph = MusicGraph()
-    subdirectories = [info[0] for info in os.walk(data_dir)]
-    subdirectories = subdirectories[1:]
-
-    for subdirectory in subdirectories:
-        _process_folder(subdirectory, music_graph)
-
-    return music_graph
-
-
-# @check_contracts
-def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
-    """Given a list that contains each playlist and a MusicGraph, mutate each song's numerical traits
-    so that they're standardized and normalized.
+@check_contracts
+def _standardize_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
+    """Given a list that contains each playlist and a MusicGraph, mutate each
+    song's numerical traits so that they're standardized and normalized.
 
     Precondition:
       - all(all(song in music_graph for song in playlist) for playlist in playlists)
@@ -140,7 +152,6 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
 
     # cast data from a list of list to a 2D array for preprocessing
     song_array = numpy.array(all_vectors)
-    # print(song_array)
 
     # standardization
     st_scalar = StandardScaler()
@@ -155,8 +166,8 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
     # normalization by scaling to length 1
     for i in range(0, len(list_of_traits)):
         v = list_of_traits[i]
-        prod = norm(v)
-        list_of_traits[i] = [v[j] / prod for j in range(0, len(v))]
+        prod = _norm(v)
+        list_of_traits[i] = [item / prod for item in v]
 
     # update each song's numerical trait
     m = 0
@@ -166,28 +177,8 @@ def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
             m += 1
 
     # should be true if all numerical_traits are correctly scaled to have length 1
-    assert all(all(0.9999 < norm(music_graph[song_id].numerical_traits) < 1.0001 for song_id in playlist)
-               for playlist in playlists)
-
-
-def norm(v1: list[float]) -> float:
-    """Returns the norm of a vector."""
-    total = sum((v1[i] * v1[i]) for i in range(0, len(v1)))
-    return total ** (1 / 2)
-
-
-def tester_function() -> tuple[Song, Song]:
-    """Do a testing run to build music graph. Returns two sample songs for further processing if needed."""
-    graph = create_song_network('data')
-    song = graph['2NV0mpU5YbyJXydzYPgw5O']  # 'AIN'T GONNA ANSWER'
-    song2 = graph['7rl489EKnUgITmkBd6P9zi']  # "Don't Play With It (feat. Latto & Yung Miami) - Remix"
-
-    print(song.numerical_traits)
-    print(song2.numerical_traits)
-
-    print([edge.get_similarity_score() for edge in song.edges.values()])
-
-    return (song, song2)
+    assert all(all(0.9999 < _norm(music_graph[s_id].numerical_traits) < 1.0001 for s_id in plst)
+               for plst in playlists)
 
 
 if __name__ == "__main__":
@@ -195,12 +186,11 @@ if __name__ == "__main__":
 
     doctest.testmod(verbose=True)
 
-    tester_function()
+    import python_ta
 
-    # import python_ta
-    #
-    # python_ta.check_all(config={
-    #     'extra-imports': ['glob', 'os', 'csv', 'datetime', 'music_graph', 'music_graph_components'],
-    #     'allowed-io': ['_process_folder'],
-    #     'max-line-length': 120
-    # })
+    python_ta.check_all(config={
+        'extra-imports': ['glob', 'os', 'csv', 'datetime', 'music_graph', 'music_graph_components',
+                          "sklearn.preprocessing", "numpy"],
+        'allowed-io': ['_process_folder'],
+        'max-line-length': 120
+    })

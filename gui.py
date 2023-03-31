@@ -24,7 +24,7 @@ from matplotlib import axes
 
 # imports for MusicMapper
 from music_graph import MusicGraph
-from build_music_graph import create_song_network
+from build_music_graph import build_music_graph
 
 from python_ta.contracts import check_contracts
 
@@ -72,7 +72,7 @@ class MainFrame:
         # initialize root frame
         self.main_frm = main_frm
         # window size
-        # self.main_frm.state('zoom')
+        self.main_frm.state('zoom')
         # window title
         self.main_frm.title('MusicMapper')
         self.music_graph = music_graph
@@ -223,7 +223,7 @@ if __name__ == '__main__':
     # })
 
     # create main frame
-    music_graph = create_song_network('data')
+    music_graph = build_music_graph('data')
     root = Tk()
     main_frame_window = MainFrame(root, music_graph)
     # run GUI
