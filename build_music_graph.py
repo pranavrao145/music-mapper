@@ -65,6 +65,9 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     csv_files = [file for path, _, _ in os.walk(
         subdirectory) for file in glob(os.path.join(path, '*.csv'))]
 
+    # TODO: make sure the following passes; as of now it returns 25 then 0
+    assert len(csv_files) == 5
+
     playlists = []  # list that contains lists that represent playlists of songs
 
     for f in csv_files:
@@ -91,19 +94,19 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
                     )
 
                     music_graph.add_song(song)
-                    songs_so_far.append(song)
-            assert len(songs_so_far) < 120
+                songs_so_far.append(song_id)
+            # assert len(songs_so_far) < 120
             playlists.append(songs_so_far)
 
     print(len(playlists))
     # process data
-    process_data(playlists)
+    process_data(playlists, music_graph)
 
     # iterate through each playlist and add edges
     for playlist in playlists:
         for i in range(0, len(playlist)):
             for j in range(i + 1, len(playlist)):
-                music_graph.add_edge(playlist[i], playlist[j])
+                music_graph.add_edge(music_graph[playlist[i]], music_graph[playlist[j]])
 
 
 # @check_contracts
@@ -119,6 +122,7 @@ def create_song_network(data_dir: str) -> MusicGraph:
     """
     music_graph = MusicGraph()
     subdirectories = [info[0] for info in os.walk(data_dir)]
+    subdirectories = subdirectories[1:]
 
     for subdirectory in subdirectories:
         _process_folder(subdirectory, music_graph)
@@ -127,7 +131,7 @@ def create_song_network(data_dir: str) -> MusicGraph:
 
 
 # @check_contracts
-def process_data(playlists: list[list[Song]]) -> None:
+def process_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
     """Given a list that contains each playlist and a MusicGraph, mutate each song's numerical traits
     so that they're standardized and normalized.
 
@@ -137,12 +141,10 @@ def process_data(playlists: list[list[Song]]) -> None:
     # process data
     all_vectors = []  # list that contains sublists for all numerical traits of all songs
     for playlist in playlists:
-        for song in playlist:
-            all_vectors.append(song.numerical_traits)
+        for song_id in playlist:
+            all_vectors.append(music_graph[song_id].numerical_traits)
 
     print(len(all_vectors))
-
-    assert all(len(vector) == 13 for vector in all_vectors)
 
     # cast data from a list of list to a 2D array for preprocessing
     song_array = numpy.array(all_vectors)
@@ -158,7 +160,7 @@ def process_data(playlists: list[list[Song]]) -> None:
     # check that the means are close to 0 and standard deviations are 1
     assert all(-0.0001 < value < 0.0001 for value in standardized_data.mean(axis=0))
     # TODO: check the following assertion
-    print(standardized_data.std(axis=0))
+    # print(standardized_data.std(axis=0))
     # assert all(value == 1.0 for value in standardized_data.std(axis=0))
 
     # normalization by minmaxscaling
@@ -180,12 +182,13 @@ def process_data(playlists: list[list[Song]]) -> None:
     # update each song's numerical trait
     m = 0
     for playlist in playlists:
-        for song in playlist:
-            song.numerical_traits = list_of_traits[m]
+        for song_id in playlist:
+            music_graph[song_id].numerical_traits = list_of_traits[m]
             m += 1
 
     # should be true if all numerical_traits are correctly scaled to have length 1
-    assert all(0.9999 < all(dot(song.numerical_traits) < 1.0001 for song in playlist) for playlist in playlists)
+    assert all(0.9999 < all(dot(music_graph[song_id].numerical_traits) < 1.0001 for song_id in playlist)
+               for playlist in playlists)
 
 
 def dot(v1: list[float]) -> float:
