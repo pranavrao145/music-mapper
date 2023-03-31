@@ -100,7 +100,13 @@ class Edge:
         self.endpoints = {first_song, second_song}
         first_song.edges[second_song.spotify_id] = self
         second_song.edges[first_song.spotify_id] = self
-        self._similarity_score = 0.0
+        # TODO: verify that this works as intended
+        self._similarity_score = 1.0 - self.euclidean_distance(first_song.numerical_traits, second_song.numerical_traits)
+
+    def euclidean_distance(self, v1: list[float], v2: list[float]) -> float:
+        """Returns the Euclidean distance/inner product between the two input vectors."""
+        total = sum((v1[i] - v2[i]) ** 2 for i in range(0, len(v1)))
+        return total ** (1 / 2)
 
     def get_similarity_score(self) -> float:
         """Return the similarity score of this Edge."""
