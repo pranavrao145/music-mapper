@@ -92,10 +92,10 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
 
                     music_graph.add_song(song)
                     songs_so_far.append(song)
-
+            assert len(songs_so_far) < 120
             playlists.append(songs_so_far)
-            songs_so_far = []
 
+    print(len(playlists))
     # process data
     process_data(playlists)
 
@@ -140,17 +140,24 @@ def process_data(playlists: list[list[Song]]) -> None:
         for song in playlist:
             all_vectors.append(song.numerical_traits)
 
+    print(len(all_vectors))
+
+    assert all(len(vector) == 13 for vector in all_vectors)
+
     # cast data from a list of list to a 2D array for preprocessing
     song_array = numpy.array(all_vectors)
-    #TODO: delete this. the following gives 2
+    # TODO: delete this. the following gives 2
     print(song_array.ndim)
+    # print(song_array)
 
     # standardization
     st_scalar = StandardScaler()
     standardized_data = st_scalar.fit_transform(song_array)
+    print(standardized_data.ndim)
+    # print(standardized_data)
     # check that the means are close to 0 and standard deviations are 1
     assert all(-0.0001 < value < 0.0001 for value in standardized_data.mean(axis=0))
-    #TODO: check the following assertion
+    # TODO: check the following assertion
     print(standardized_data.std(axis=0))
     # assert all(value == 1.0 for value in standardized_data.std(axis=0))
 
