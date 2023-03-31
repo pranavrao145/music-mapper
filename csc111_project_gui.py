@@ -23,12 +23,13 @@ from matplotlib.figure import Figure
 from matplotlib import axes
 
 # imports for MusicMapper
-import music_graph
+from music_graph import MusicGraph
+from build_music_graph import create_song_network
 
 from python_ta.contracts import check_contracts
 
 
-@check_contracts
+# @check_contracts
 class MainFrame:
     """Generates an instance of the main landing page of MusicMapper along with its functionality.
 
@@ -62,7 +63,7 @@ class MainFrame:
     toolbar: NavigationToolbar2Tk
     ax: axes._axes.Axes
 
-    def __init__(self, main_frm: Tk) -> None:
+    def __init__(self, main_frm: Tk, music_graph: MusicGraph) -> None:
         """Initialize the tkinter interface.
         """
         # initialize root frame
@@ -71,6 +72,7 @@ class MainFrame:
         self.main_frm.state('zoom')
         # window title
         self.main_frm.title('MusicMapper')
+        self.music_graph = music_graph
 
         # create title label
         self.title_label = ttk.Label(main_frm, text='MusicMapper', font=('BM Hanna Pro', 120))
@@ -122,12 +124,15 @@ class MainFrame:
         self.playlists_graph.clear()
 
         # ********** (TO BE CHANGED) potential example of algorithm output
-        input_song = self.button_click()
-        # input_song = self.button_click()[0]
-        # input_artist = self.button_click()[1]
+        # input_song = self.button_click()
+        input_song = self.button_click()[0]
+        input_artist = self.button_click()[1]
 
-        songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
-        # songs = music_graph.get_recommendations(..., 5)
+        spotify_id = self.music_graph.get_spotify_id(input_song, input_artist)
+
+        # songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
+        songs = self.music_graph.get_recommendations(spotify_id, 50)
+        print(songs)
 
         # use loop to create the graph nodes and edges
         for song in songs:
@@ -201,7 +206,8 @@ if __name__ == '__main__':
     # })
 
     # create main frame
+    music_graph = create_song_network('data')
     root = Tk()
-    main_frame_window = MainFrame(root)
+    main_frame_window = MainFrame(root, music_graph)
     # run GUI
     root.mainloop()
