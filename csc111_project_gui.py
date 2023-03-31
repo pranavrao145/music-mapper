@@ -22,8 +22,8 @@ from matplotlib.backends.backend_tkagg import (
 from matplotlib.figure import Figure
 from matplotlib import axes
 
-# import MusicMapper algorithm
-from music_graph import get_recommendations
+# imports for MusicMapper
+import music_graph
 
 from python_ta.contracts import check_contracts
 
@@ -36,7 +36,9 @@ class MainFrame:
         - main_frm: Creates the tkinter frame.
         - title_label: Creates the MusicMapper title label.
         - song_input: Represents the user song input.
-        - song_entry: Creates an entry box for user input.
+        - song_entry: Creates an entry box for the user to input song name.
+        - artist_input: Represents the user artist input.
+        - artist_entry: Creates an entry box for the user to input artist name.
         - create_playlist_button: Creates a button object.
         - playlists_graph: Creates a networkx graph object.
         - fig: Creates a figure object.
@@ -50,6 +52,8 @@ class MainFrame:
     main_frm: Tk
     title_label: ttk.Label
     song_input: StringVar
+    artist_input: StringVar
+    artist_entry: ttk.Entry
     song_entry: ttk.Entry
     create_playlist_button: ttk.Button
     playlists_graph: nx.Graph
@@ -77,6 +81,12 @@ class MainFrame:
         # entry textbox placeholder
         self.song_entry.insert(0, 'Enter a Song')
 
+        # (user-input) artist entry
+        self.artist_input = StringVar()
+        self.artist_entry = ttk.Entry(main_frm, textvariable=self.artist_input)
+        # entry textbox placeholder
+        self.artist_entry.insert(0, 'Enter an Artist')
+
         # create playlist button
         self.create_playlist_button = ttk.Button(main_frm, text='Create Playlist')
         # add button functionality
@@ -100,6 +110,7 @@ class MainFrame:
         # adjust widget positions
         self.title_label.pack()
         self.song_entry.pack()
+        self.artist_entry.pack()
         self.create_playlist_button.pack()
 
     def graph_playlist(self) -> None:
@@ -112,13 +123,15 @@ class MainFrame:
 
         # ********** (TO BE CHANGED) potential example of algorithm output
         input_song = self.button_click()
+        # input_song = self.button_click()[0]
+        # input_artist = self.button_click()[1]
+
         songs = [('Eat Your Young', 1.5), ('Eyes Closed', 0.4), ('Jaded', 0.8), ('Run Away to Mars', 0.2)]
-        if input_song == '':
-            self.song_entry.insert(0, 'Please Enter a Valid Song')
-        else:
-            # use loop to create the graph nodes and edges
-            for song in songs:
-                self.playlists_graph.add_edge(input_song, song[0], weight=song[1])
+        # songs = music_graph.get_recommendations(..., 5)
+
+        # use loop to create the graph nodes and edges
+        for song in songs:
+            self.playlists_graph.add_edge(input_song, song[0], weight=song[1])
         # **********
 
         # produce graph with weighted edges
@@ -161,14 +174,17 @@ class MainFrame:
         nx.draw_networkx_edge_labels(playlist_graph, pos, edge_labels, font_family="Times New Roman",
                                      font_size=17, ax=self.ax)
 
-    def button_click(self) -> str:
-        """Records and returns the song input upon button click.
+    def button_click(self) -> tuple[str, str]:
+        """Records and returns the song input and artist input upon button click.
         """
         # retrieves and stores user-input
         retrieve_song_input = self.song_entry.get()
+        retrieve_artist_input = self.artist_entry.get()
+
         # test print: will delete before final submission
         print(retrieve_song_input)
-        return retrieve_song_input
+        print(retrieve_artist_input)
+        return (retrieve_song_input, retrieve_artist_input)
 
 
 if __name__ == '__main__':
