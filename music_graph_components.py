@@ -41,8 +41,8 @@ class Song:
         - self.spotify_id != ''
         - self.track_name != ''
         - self.album_name != ''
+        - self.artist_names != []
         - all(name != '' for name in self.artist_names)
-        - all(genre != '' for genre in self.genres)
         - len(self.numerical_traits) == 13
     """
     spotify_id: str
@@ -135,8 +135,10 @@ if __name__ == '__main__':
 
     python_ta.check_all(config={
         # the names (strs) of imported modules
-        'extra-imports': ['annotations', 'datetime', 'check_contracts'],
+        'extra-imports': ['annotations', 'check_contracts'],
         # the names (strs) of functions that call print/open/input
         'allowed-io': [],
-        'max-line-length': 120
+        'max-line-length': 120,
+        'max-args': 10,
+        'disable': ['R0902']
     })

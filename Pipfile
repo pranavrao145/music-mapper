@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-python-ta = "*"
+python-ta = "~=2.4.2"
 scikit-learn = "*"
 numpy = "*"
 networkx = "*"
@@ -14,4 +14,4 @@ matplotlib = "*"
 
 [requires]
 python_version = "3.11"
-python_full_version = "3.11.1"
+python_full_version = "3.11.2"

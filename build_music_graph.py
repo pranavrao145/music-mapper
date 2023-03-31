@@ -75,6 +75,7 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
             next(reader)
 
             for line in reader:
+                print(line)
                 song_id = line[0]
 
                 if song_id not in music_graph:
