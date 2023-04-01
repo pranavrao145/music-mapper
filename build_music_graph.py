@@ -119,10 +119,7 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
                     song = Song(
                         spotify_id=line[0],
                         track_name=line[2],
-                        album_name=line[3],
                         artist_names=line[4].split(','),
-                        release_date=line[5],
-                        genres=line[10].split(','),
                         numerical_traits=song_numerical_traits
                     )
 
