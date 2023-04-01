@@ -12,12 +12,14 @@ This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu
 """
 from tkinter import Tk
 from gui import MainFrame
-from build_music_graph import create_song_network
+from build_music_graph import build_music_graph
 
 if __name__ == '__main__':
     # Create our MusicGraph.
-    music_graph = create_song_network('data')
+    music_graph = build_music_graph('data')
+
     root = Tk()
     main_frame_window = MainFrame(root, music_graph)
+
     # Run GUI
     root.mainloop()

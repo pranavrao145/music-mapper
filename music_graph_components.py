@@ -14,11 +14,11 @@ community at the University of Toronto St. George campus.
 This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
 """
 from __future__ import annotations
-# import datetime
+
 from python_ta.contracts import check_contracts
 
 
-# @check_contracts
+@check_contracts
 class Song:
     """A song from Spotify.
 
@@ -69,7 +69,7 @@ class Song:
         self.edges = {}
 
 
-# @check_contracts
+@check_contracts
 class Edge:
     """A link (or "edge") connecting two Songs in a MusicGraph network.
 
@@ -142,9 +142,7 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        # the names (strs) of imported modules
-        'extra-imports': ['annotations', 'check_contracts'],
-        # the names (strs) of functions that call print/open/input
+        'extra-imports': [],
         'allowed-io': [],
         'max-line-length': 120,
         'max-args': 10,
