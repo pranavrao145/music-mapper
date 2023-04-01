@@ -1,5 +1,12 @@
+# CSC111 Winter 2023 Final Project: Python libraries needed to run this project.
+
+# Testing and code checking
 python-ta~=2.4.2
+
+# Math tools
 scikit-learn
 numpy
-networkx
 matplotlib
+
+# Graphics and data visualization
+networkx
