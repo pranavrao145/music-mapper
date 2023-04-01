@@ -87,11 +87,16 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     specified in the module header, iterate through each CSV file and add it to the
     song graph.
 
-    In addition, standardize and normalize the numerical traits based on song data in the FOLDER,
-    and add edges between each song that share a PLAYLIST.
-    (Note: the reasoning is that two songs might share more than one playlist within a genre (subfolder),
-    but not across different subfolders. Also, bell shape can be assumed when operating on subfolders but
-    not necessarily across different folders, so standardization works only on the subfolder level.)
+    In addition, standardize and normalize the numerical traits based on song
+    data in the FOLDER, and add edges between each song that share a PLAYLIST.
+    (Note: the reasoning is that two songs might share more than one playlist
+    within a genre (subfolder), but not across different subfolders. Also, bell
+    shape can be assumed when operating on subfolders but not necessarily
+    across different folders, so standardization works only on the subfolder
+    level.)
+
+    Preconditions:
+    - data directory only contains CSV file of the format specified in the module header
     """
     csv_files = [file for path, _, _ in os.walk(
         subdirectory) for file in glob(os.path.join(path, '*.csv'))]
