@@ -86,6 +86,9 @@ class MusicGraph:
             if track_name == self._songs[u].track_name and artist_name in self._songs[u].artist_names:
                 return self._songs[u].spotify_id
 
+        # we will never reach this branch because of precondition, it's for code correctness
+        return ''
+
     def get_recommendations(self, song_id: str, num_recs: int) -> list[tuple[str, int]]:
         """Given a song input, return a list of num_recs recommended songs in (song name, similarity score)
         form."""
