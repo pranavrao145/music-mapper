@@ -14,7 +14,7 @@ from python_ta.contracts import check_contracts
 from music_graph_components import Song, Edge
 
 
-# @check_contracts
+@check_contracts
 class MusicGraph:
     """A graph that represents the network of all the Songs from the inputted data set.
 
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
     python_ta.check_all(config={
         # the names (strs) of imported modules
-        'extra-imports': ['music_graph_components'],  # 'check_contracts'
+        'extra-imports': ['music_graph_components'],
         # the names (strs) of functions that call print/open/input
         'allowed-io': [],
         'max-line-length': 120
