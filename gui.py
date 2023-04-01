@@ -53,8 +53,7 @@ class MainFrame:
 
     Preconditions:
     - the song_input and artist_input are valid inputs found in the dataset.
-    - artist_input is a valid artist input that's in the dataset.
-    - artist_input must be the artist of the song associated with song_input
+    - artist_input must be the artist of the song associated with song_input.
     """
     main_frm: Tk
     music_graph: MusicGraph
