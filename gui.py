@@ -163,9 +163,9 @@ class MainFrame:
         """
         # filter edges with high v.s. low similarity scores into two separate lists
         elarge = [(song1, song2) for (song1, song2, weights) in playlist_graph.edges(data=True) if
-                  weights["weight"] > 0.5]
+                  weights["weight"] > 50]
         esmall = [(song1, song2) for (song1, song2, weights) in playlist_graph.edges(data=True) if
-                  weights["weight"] <= 0.5]
+                  weights["weight"] <= 50]
 
         # node positions (dict where each key is a node that corresponds to its position)
         pos = nx.spring_layout(playlist_graph, seed=7)
