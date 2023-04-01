@@ -46,12 +46,12 @@ import csv
 import numpy
 from sklearn.preprocessing import StandardScaler
 
-from python_ta.contracts import check_contracts
+# from python_ta.contracts import check_contracts
 from music_graph import MusicGraph
 from music_graph_components import Song
 
 
-@check_contracts
+# @check_contracts
 def build_music_graph(data_dir: str) -> MusicGraph:
     """
     Given a data directory, go through each subfolder in that directory and
@@ -73,14 +73,14 @@ def build_music_graph(data_dir: str) -> MusicGraph:
     return music_graph
 
 
-@check_contracts
+# @check_contracts
 def _norm(v1: list[float]) -> float:
     """Returns the norm of a vector."""
     total = sum((item * item) for item in v1)
     return total ** (1 / 2)
 
 
-@check_contracts
+# @check_contracts
 def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
     """
     Given a subfolder in a data directory that ONLY contains CSV files of the format
@@ -141,7 +141,7 @@ def _process_folder(subdirectory: str, music_graph: MusicGraph) -> None:
                     music_graph[playlist[i]], music_graph[playlist[j]])
 
 
-@check_contracts
+# @check_contracts
 def _standardize_data(playlists: list[list[str]], music_graph: MusicGraph) -> None:
     """Given a list that contains each playlist and a MusicGraph, mutate each
     song's numerical traits so that they're standardized and normalized.

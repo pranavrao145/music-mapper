@@ -10,11 +10,11 @@ community at the University of Toronto St. George campus.
 This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu.
 """
 from __future__ import annotations
-from python_ta.contracts import check_contracts
+# from python_ta.contracts import check_contracts
 from music_graph_components import Song, Edge
 
 
-@check_contracts
+# @check_contracts
 class MusicGraph:
     """A graph that represents the network of all the Songs from the inputted data set.
 
@@ -105,7 +105,8 @@ class MusicGraph:
         j = len(list_of_edges) - 1
         while j > (len(list_of_edges) - 1) - num_recs and j >= 0:
             edge = list_of_edges[j]
-            results.append((edge.get_other_endpoint(song).track_name, int(round(edge.get_similarity_score(), 2) * 100)))
+            results.append((edge.get_other_endpoint(song).track_name, int(
+                round(edge.get_similarity_score(), 2) * 100)))
             j -= 1
 
         return results

@@ -26,11 +26,11 @@ from matplotlib.backends.backend_tkagg import (
 from matplotlib.figure import Figure
 
 # imports for MusicMapper
-from python_ta.contracts import check_contracts
+# from python_ta.contracts import check_contracts
 from music_graph import MusicGraph
 
 
-@check_contracts
+# @check_contracts
 class MainFrame:
     """Generates an instance of the main page along with its functionality.
 

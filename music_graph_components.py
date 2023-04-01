@@ -15,10 +15,10 @@ This file is Copyright (c) 2023 Yibing Ju, Jiya Patel, Pranav Rao, and Bruce Liu
 """
 from __future__ import annotations
 
-from python_ta.contracts import check_contracts
+# from python_ta.contracts import check_contracts
 
 
-@check_contracts
+# @check_contracts
 class Song:
     """A song from Spotify.
 
@@ -69,7 +69,7 @@ class Song:
         self.edges = {}
 
 
-@check_contracts
+# @check_contracts
 class Edge:
     """A link (or "edge") connecting two Songs in a MusicGraph network.
 
