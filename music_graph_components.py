@@ -25,10 +25,7 @@ class Song:
     Instance Attributes:
         - spotify_id: The Spotify ID of this song.
         - track_name: The name of this song.
-        - album_name: The album name of this song.
         - artist_names: The name(s) of the artist(s) of this song.
-        - release_date: The date that this song was released.
-        - genres: The genre(s) of this song.
         - numerical_traits: A list containing the numerically-quantified traits of this song.
         - edges:
             A mapping containing the songs that are adjacent to this song.
@@ -47,24 +44,18 @@ class Song:
     """
     spotify_id: str
     track_name: str
-    album_name: str
     artist_names: list[str]
-    release_date: str
-    genres: list[str]
     numerical_traits: list[float]
     edges: dict[str, Edge]
 
-    def __init__(self, spotify_id: str, track_name: str, album_name: str, artist_names: list[str],
-                 release_date: str, genres: list[str], numerical_traits: list[float]) -> None:
+    def __init__(self, spotify_id: str, track_name: str, artist_names: list[str],
+                 numerical_traits: list[float]) -> None:
         """Initialize a new song with an empty collection of edges, the given Spotify ID, track name,
         album name, artist name(s), release date, genre(s), and numerical trait(s).
         """
         self.spotify_id = spotify_id
         self.track_name = track_name
-        self.album_name = album_name
         self.artist_names = artist_names
-        self.release_date = release_date
-        self.genres = genres
         self.numerical_traits = numerical_traits
         self.edges = {}
 
