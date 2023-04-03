@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 python-ta = "~=2.4.2"
+typeguard = "==2.13.3"
 scikit-learn = "*"
 numpy = "*"
 networkx = "*"

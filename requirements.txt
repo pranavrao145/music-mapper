@@ -2,6 +2,7 @@
 
 # Testing and code checking
 python-ta~=2.4.2
+typeguard==2.13.3
 
 # Math tools
 scikit-learn
